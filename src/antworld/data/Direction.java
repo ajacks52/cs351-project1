@@ -48,4 +48,4 @@ public enum Direction
   public static final Direction getRandomDir() {return values()[Constants.random.nextInt(SIZE)];}
   public static final Direction getLeftDir(Direction dir) {return values()[(dir.ordinal()+SIZE-1) % SIZE];}
   public static final Direction getRightDir(Direction dir) {return values()[(dir.ordinal()+1) % SIZE];}
-}; 
+}

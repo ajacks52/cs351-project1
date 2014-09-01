@@ -1,4 +1,4 @@
-package antworld.dynamicMap;
+package antworld.dynamicmap;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,7 +40,7 @@ public class Gui extends Component implements MouseListener, MouseWheelListener,
   final Color MEDIC    = Color.decode("0x7C00BA");
   final Color BASIC    = Color.decode("0x7000A8");
   
-  int rgb;   // use in the form  "rgb = WHITE.getRGB();"
+  int rgb;   // use in the form  "rgb = WATER.getRGB();"
 
   public static void main(String[] av)
   {
