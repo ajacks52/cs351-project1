@@ -4,14 +4,48 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+
+import antworld.data.AntData;
+import antworld.data.CommData;
+import antworld.data.FoodData;
+import antworld.data.FoodType;
+
 
 import javax.imageio.ImageIO;
 
-public class AnalyzeMap
+public class AnalyzeMap extends Thread 
 {
+  
   BufferedImage img = null;
+  private CommData commD;
   int rgb[][] = null;
+  boolean done = false;
+  
+  public void run() {
+    
+    System.out.println(getName()+" STARTED! ");
+    
+    findRGB();
+    
+    System.out.println(getName()+" DONE! ");
+    done = true;
+  }
+  
+  
+  
+  
+  final Color UNKNOWN = Color.decode("0x0000C0");
+  final Color WATER = Color.decode("0x0000C8");
+  final Color DEFENCE = Color.decode("0xAA00FF");
+  final Color ATTACK = Color.decode("0xA300F4");
+  final Color SPEED = Color.decode("0x9800E3");
+  final Color VISION = Color.decode("0x8E00D5");
+  final Color CARRY = Color.decode("0x8900CD");
+  final Color MEDIC = Color.decode("0x7C00BA");
+  final Color BASIC = Color.decode("0x7000A8");
 
+ 
 
   AnalyzeMap()
   {
@@ -21,8 +55,32 @@ public class AnalyzeMap
     }
     catch (IOException e)
     {}
-    findRGB();
   }
+  
+  private void drawFood()
+  {
+    HashSet<FoodType>  fs = new HashSet<FoodType>();
+    HashSet<FoodData>  fd = new HashSet<FoodData>();
+    
+    
+    FoodData f = new FoodData();
+    
+    f.foodType = FoodType.CARRY;
+    f.gridX = 50;
+    f.gridY = 50;
+    
+    fd.add(f);
+    
+    
+    
+    for (FoodData food : fd)
+    {
+     // System.out.println("type: " + food.foodType );
+    }  
+    
+    
+  }
+
 
   private void findRGB()
   {
@@ -36,11 +94,12 @@ public class AnalyzeMap
         //System.out.printf("%,d, %d\n,", i,  rgb[x][y]);   // takes very long like 5 minutes when i ask it to print while it's reading in the array
       }
     }
-    System.out.println("done");
+    drawFood();
+
   }
 
   public static void main(String[] args)
   {
-    AnalyzeMap map = new AnalyzeMap();
+   // AnalyzeMap map = new AnalyzeMap();
   }
 }

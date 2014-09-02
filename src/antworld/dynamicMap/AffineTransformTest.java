@@ -6,59 +6,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 
-public class Gui
+public class AffineTransformTest
 {
   private static TransformingCanvas canvas;
   static BufferedImage bImage;
   static Label stat;
-  static int cnt;
-  // Colors to be used to tell which ant are around and which food types
-  final static Color UNKNOWN = Color.decode("0x0000C0");
-  final Color WATER = Color.decode("0x0000C8");
-  final static Color DEFENCE = Color.decode("0xAA00FF");
-  final static Color ATTACK = Color.decode("0xA300F4");
-  final static Color SPEED = Color.decode("0x9800E3");
-  final static Color VISION = Color.decode("0x8E00D5");
-  final static Color CARRY = Color.decode("0x8900CD");
-  final static Color MEDIC = Color.decode("0x7C00BA");
-  final static Color BASIC = Color.decode("0x7000A8");
-  int rgb; // use in the form "rgb = WATER.getRGB();"
 
-  public static void main(String[] args) throws InterruptedException
-  {
-    AnalyzeMap m =  new AnalyzeMap();
-    m.start();
-    
-    Thread.sleep(7000);
-    
-    if(!m.isAlive())
-    {
-      System.out.println("CONSTRUCTING THE MAP NOW");
-      init();
-    }
-    
-     
-    bImage.setRGB(4, 5, SPEED.getRGB());
-    bImage.setRGB(5, 5, UNKNOWN.getRGB());
-    bImage.setRGB(6, 5, DEFENCE.getRGB());
-    bImage.setRGB(7, 5, VISION.getRGB());
-    bImage.setRGB(8, 5, CARRY.getRGB());
-    bImage.setRGB(9, 5, MEDIC.getRGB());
-    bImage.setRGB(10, 5, CARRY.getRGB());
-    bImage.setRGB(11, 5, ATTACK.getRGB());
-    bImage.setRGB(12, 5, BASIC.getRGB());
-
-    
-    
-  }
-  
-  private static void init()
+  public static void main(String[] args)
   {
     try
     {
@@ -66,7 +24,7 @@ public class Gui
     }
     catch (IOException e)
     {
-      e.printStackTrace();
+      System.out.println("Error while saving file.");
     }
     JFrame frame = new JFrame();
     canvas = new TransformingCanvas();
@@ -82,9 +40,6 @@ public class Gui
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
   }
-
-  public static void updateImage()
-  {}
 
   private static class TransformingCanvas extends JComponent
   {
@@ -153,19 +108,16 @@ public class Gui
       stat.setText("Point is: " + e.getX() + " " + e.getY());
     }
 
-    public void mouseEntered(MouseEvent e)
-    {}
+    public void mouseEntered(MouseEvent e){}
 
-    public void mouseExited(MouseEvent e)
-    {}
+    public void mouseExited(MouseEvent e){}
 
     public void mouseMoved(MouseEvent e)
     {
-      stat.setText("Mouse to " + e.getPoint());
+      stat.setText("Mouse to " + e.getPoint()); 
     }
 
-    public void mouseReleased(MouseEvent e)
-    {}
+    public void mouseReleased(MouseEvent e){}
   }
 
   private static class ScaleHandler implements MouseWheelListener
