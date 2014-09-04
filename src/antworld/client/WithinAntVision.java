@@ -108,8 +108,8 @@ public class WithinAntVision
   }
 	
 //  Hard-coded main(), for testing only
-	public static void main(String[] args)
-	{
-		new WithinAntVision(5, 5, 3);
-	}
+//	public static void main(String[] args)
+//	{
+//		new WithinAntVision(5, 5, 3);
+//	}
 }
