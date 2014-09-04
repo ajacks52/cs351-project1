@@ -34,7 +34,7 @@ public class WithinAntVision
 		{
 			for (int y = centerY - radius; y <= centerY + radius; y++)
 			{
-				if (inCircle(centerX, centerY, radius, x, y))
+				if (inCircle(centerX, centerY, radius, x, y) && x >= 0 && y >= 0)
 				{
 					getPoints().add(new Point(x, y));
 				}
