@@ -36,12 +36,12 @@ public class WithinAntVision
 			{
 				if (inCircle(centerX, centerY, radius, x, y))
 				{
-					points.add(new Point(x, y));
+					getPoints().add(new Point(x, y));
 				}
 			}
 		}
 //		System.out.println(points);
-		return points;
+		return getPoints();
 	}
 	
 	/**
@@ -88,10 +88,28 @@ public class WithinAntVision
 		}
 		return false;
 	}
+
+	/**
+	 * Get ArrayList of visible points.
+	 */
+	public ArrayList<Point> getPoints()
+  {
+	  return points;
+  }
+
+	/**
+	 * Set ArrayList of visible points.
+	 * 
+	 * @param points
+	 */
+	public void setPoints(ArrayList<Point> points)
+  {
+	  this.points = points;
+  }
 	
 //  Hard-coded main(), for testing only
-//	public static void main(String[] args)
-//	{
-//		new WithinAntVision(5, 5, 3);
-//	}
+	public static void main(String[] args)
+	{
+		new WithinAntVision(5, 5, 3);
+	}
 }
