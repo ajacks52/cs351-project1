@@ -34,7 +34,7 @@ public class WithinAntVision
 		{
 			for (int y = centerY - radius; y <= centerY + radius; y++)
 			{
-				if (inCircle(centerX, centerY, radius, x, y) && x >= 0 && y >= 0)
+				if (inCircle(centerX, centerY, radius, x, y))
 				{
 					getPoints().add(new Point(x, y));
 				}
@@ -93,9 +93,9 @@ public class WithinAntVision
 	 * Get ArrayList of visible points.
 	 */
 	public ArrayList<Point> getPoints()
-  {
+  	{
 	  return points;
-  }
+  	}
 
 	/**
 	 * Set ArrayList of visible points.
@@ -103,9 +103,20 @@ public class WithinAntVision
 	 * @param points
 	 */
 	public void setPoints(ArrayList<Point> points)
-  {
+	{
 	  this.points = points;
-  }
+  	}
+	
+	
+	/**
+	 * Gets length of the points ArrayList.
+	 * 
+	 * @return an int representing the size of the ArrayList.
+	 */
+	public int getSize()
+	{
+		return points.size();
+	}
 	
 //  Hard-coded main(), for testing only
 //	public static void main(String[] args)
