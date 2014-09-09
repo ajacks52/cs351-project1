@@ -24,5 +24,6 @@ public enum TeamNameEnum
   Thistle,
   Toothachegrass,
   Windmillgrass,
+  Wolfcoder,
   Yucca
 }

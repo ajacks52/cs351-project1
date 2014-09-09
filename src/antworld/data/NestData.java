@@ -2,7 +2,8 @@ package antworld.data;
 
 import java.io.Serializable;
 
-public class NestData implements Serializable {
+public class NestData implements Serializable 
+{
   private static final long serialVersionUID = Constants.VERSION;
 
   public final NestNameEnum nestName;

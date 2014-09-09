@@ -10,12 +10,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 
-public class Gui
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class Gui extends Thread
 {
   private static TransformingCanvas canvas;
   static BufferedImage bImage;
+  static BufferedImage bImageEraser;
   static Label stat;
   static int cnt;
   // Colors to be used to tell which ant are around and which food types
@@ -28,46 +31,21 @@ public class Gui
   final static Color CARRY = Color.decode("0x8900CD");
   final static Color MEDIC = Color.decode("0x7C00BA");
   final static Color BASIC = Color.decode("0x7000A8");
-  int rgb; // use in the form "rgb = WATER.getRGB();"
+  static int rgb; // use in the form "rgb = WATER.getRGB();"
+  private static BufferedImage bImageErase;
 
-  public static void main(String[] args) throws InterruptedException
-  {
-    AnalyzeMap m =  new AnalyzeMap();
-    m.start();
-    
-    Thread.sleep(7000);
-    
-    if(!m.isAlive())
-    {
-      System.out.println("CONSTRUCTING THE MAP NOW");
-      init();
-    }
-    
-     
-    bImage.setRGB(4, 5, SPEED.getRGB());
-    bImage.setRGB(5, 5, UNKNOWN.getRGB());
-    bImage.setRGB(6, 5, DEFENCE.getRGB());
-    bImage.setRGB(7, 5, VISION.getRGB());
-    bImage.setRGB(8, 5, CARRY.getRGB());
-    bImage.setRGB(9, 5, MEDIC.getRGB());
-    bImage.setRGB(10, 5, CARRY.getRGB());
-    bImage.setRGB(11, 5, ATTACK.getRGB());
-    bImage.setRGB(12, 5, BASIC.getRGB());
 
-    
-    
-  }
-  
   private static void init()
   {
     try
     {
       bImage = ImageIO.read(new File("resources/AntWorld.png"));
-    }
-    catch (IOException e)
+      bImageEraser = ImageIO.read(new File("resources/AntWorld.png"));
+    } catch (IOException e)
     {
       e.printStackTrace();
     }
+
     JFrame frame = new JFrame();
     canvas = new TransformingCanvas();
     TranslateHandler translater = new TranslateHandler();
@@ -81,10 +59,15 @@ public class Gui
     frame.setSize(bImage.getWidth() / 4, bImage.getHeight() / 4);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
+    Timer timer = new Timer("Printer");
+    MyTask t = new MyTask();
+    timer.schedule(t, 0, 2000);
+    
   }
 
   public static void updateImage()
-  {}
+  {
+  }
 
   private static class TransformingCanvas extends JComponent
   {
@@ -112,7 +95,8 @@ public class Gui
       ourGraphics.setColor(Color.BLACK);
       ourGraphics.fillRect(0, 0, getWidth(), getHeight());
       ourGraphics.setTransform(tx);
-      ourGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      ourGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON);
       ourGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
           RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       ourGraphics.drawImage(bImage, 0, 0, dims.width, dims.height, this);
@@ -120,7 +104,8 @@ public class Gui
     }
   }
 
-  private static class TranslateHandler implements MouseListener, MouseMotionListener
+  private static class TranslateHandler implements MouseListener,
+      MouseMotionListener
   {
     private int lastOffsetX;
     private int lastOffsetY;
@@ -154,10 +139,12 @@ public class Gui
     }
 
     public void mouseEntered(MouseEvent e)
-    {}
+    {
+    }
 
     public void mouseExited(MouseEvent e)
-    {}
+    {
+    }
 
     public void mouseMoved(MouseEvent e)
     {
@@ -165,7 +152,8 @@ public class Gui
     }
 
     public void mouseReleased(MouseEvent e)
-    {}
+    {
+    }
   }
 
   private static class ScaleHandler implements MouseWheelListener
@@ -183,5 +171,52 @@ public class Gui
         canvas.repaint();
       }
     }
+  }
+
+  @Override
+  public void run()
+  {
+
+    System.out.println("CONSTRUCTING THE MAP NOW");
+    init();
+
+  }
+
+  static void erasePixels()
+  {
+    //bImage = bImageErase;
+    canvas.repaint();
+  }
+
+  public static void drawAnts(int x, int y)
+  {
+    rgb = Color.ORANGE.getRGB();
+    bImage.setRGB(x, y, rgb);
+    
+  //  canvas.repaint();
+  }
+
+  public static void drawFood(int x, int y)
+  {
+    rgb = Color.BLUE.getRGB();
+    bImage.setRGB(x, y, rgb);
+    canvas.repaint();
+
+  }
+}
+
+
+class MyTask extends TimerTask {
+  private int times = 0;
+
+  public void run() {
+      times++;
+      if (times <= 5) {
+          Gui.erasePixels();
+      } else {
+
+          //Stop Timer.
+          this.cancel();
+      }
   }
 }
