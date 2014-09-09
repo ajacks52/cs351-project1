@@ -1,4 +1,5 @@
-package antworld;
+package antworld.client;
+
 
 import java.awt.Container;
 import java.awt.MediaTracker;
