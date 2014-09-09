@@ -13,174 +13,177 @@ import antworld.data.LandType;
 
 public class AntLogic
 {
-	static CommData data;
-	static AntData ant;
-	static AntAction action = new AntAction(AntActionType.STASIS);
-	static int countBasic = 0;
-	static int countMedic = 0;
-	static int countVision = 0;
-	static int countCarry = 0;
-	static int countSpeed = 0;
-	static int countDefence = 0;
-	static int countAttack = 0;
+  static CommData data;
+  static AntData ant;
+  static AntAction action = new AntAction(AntActionType.STASIS);
+  static int countBasic = 0;
+  static int countMedic = 0;
+  static int countVision = 0;
+  static int countCarry = 0;
+  static int countSpeed = 0;
+  static int countDefence = 0;
+  static int countAttack = 0;
 
-	public static AntAction chooseAction(CommData data, AntData ant)
-	{
-		//data = d;
-		//ant  = a;
-	    AntAction action = new AntAction(AntActionType.STASIS);
- 	    //AntAction eat_drop =  public AntAction(, Direction, 50);
-	    //AntAction action = new AntAction(AntActionType.STASIS);
-
-		
-		if (ant.ticksUntilNextAction > 0)
-		{
-			return action;
-		}
-		
-		if (underGround(ant))
-		{
-			action.type = AntActionType.EXIT_NEST;
-			action.x = ClientRandomWalk.getCenterX() - Constants.NEST_RADIUS
-					+ Constants.random.nextInt(2 * Constants.NEST_RADIUS);
-			action.y = ClientRandomWalk.getCenterY() - Constants.NEST_RADIUS
-					+ Constants.random.nextInt(2 * Constants.NEST_RADIUS);
-
-			return action;
-
-		}
-		if (ant.health < ant.antType.getMaxHealth()/2)
-		{
-			action.type = AntActionType.MOVE;
-		    action.direction = Direction.getRandomDir(); //location of base told by astar!!!
-		    return action;
-		}
-		
+  public static AntAction chooseAction(CommData data, AntData ant)
+  {
+    AntAction action = new AntAction(AntActionType.STASIS);
+    if (ant.ticksUntilNextAction > 0)
+    {
+      return action;
+    }
+    if (underGround(ant))
+    {
+      action.type = AntActionType.EXIT_NEST;
+      action.x = ClientRandomWalk.getCenterX() - Constants.NEST_RADIUS
+          + Constants.random.nextInt(2 * Constants.NEST_RADIUS);
+      action.y = ClientRandomWalk.getCenterY() - Constants.NEST_RADIUS
+          + Constants.random.nextInt(2 * Constants.NEST_RADIUS);
+      return action;
+    }
+    if (ant.health < ant.antType.getMaxHealth() / 2)
+    {
+      action.type = AntActionType.MOVE;
+      action.direction = Direction.getRandomDir(); // location of base told by
+                                                   // astar!!!
+      return action;
+    }
+    // if() ant has food go home!!
+    AntAction drink = new AntAction(AntActionType.PICKUP, Direction.SOUTHEAST, 50);
+    AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
+    AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
+    AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
     
+    drink.direction = Direction.SOUTHEAST;
+    drink.type = AntActionType.PICKUP;
     
-
-		
-		for (FoodData foodpiece : data.foodSet) {
-			int absX = Math.abs(ant.gridX - foodpiece.gridX);
-			int absY = Math.abs(ant.gridY - foodpiece.gridY);
-		    if( absX < 20 && absY < 20)
-		    {
-		    	action.type = AntActionType.MOVE;
-		    	if(ant.gridX < foodpiece.gridX)
-		    	{	    		
-		    		action.direction = Direction.EAST;
-		    		if(absX == 1)
-		    		{
-		    			AntAction eat = new AntAction(AntActionType.PICKUP, Direction.EAST, 50);
-		    			return eat;
-		    		}
-		    		return action;
-		    	}
-		    	if(ant.gridY < foodpiece.gridY)
-		    	{
-		    		action.direction = Direction.SOUTH;
-		    		if(absY == 1)
-            {
-              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.SOUTH, 50);
-              return eat;
-            }
-		    		return action;
-		    	}
-		    	
-		    	if(ant.gridX > foodpiece.gridX)
-          {         
-            action.direction = Direction.WEST;
-            if(absX == 1)
-            {
-              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.WEST, 50);
-              return eat;
-            }
-            return action;
-          }
-          if(ant.gridY > foodpiece.gridY)
+    //if(true){return drink;}
+    
+    int absToNestX = Math.abs(ant.gridX - ClientRandomWalk.getCenterX());
+    int absToNestY = Math.abs(ant.gridY - ClientRandomWalk.getCenterY());
+    
+    if (absToNestX < 10)
+    {
+      if (absToNestY < 10)
+      {
+        System.out.println("/n/n/n/n I am droppfing water!! /n//n/n/");
+        return drop;
+      }
+    }
+    if (ant.carryUnits > 0)
+    {
+      return goHome;
+    }
+    
+    for (FoodData foodpiece : data.foodSet)
+    {
+      int absX = Math.abs(ant.gridX - foodpiece.gridX);
+      int absY = Math.abs(ant.gridY - foodpiece.gridY);
+      if (absX < 20 && absY < 20)
+      {
+        action.type = AntActionType.MOVE;
+        if (ant.gridX < foodpiece.gridX)
+        {
+          action.direction = Direction.EAST;
+          if (absX == 1)
           {
-            action.direction = Direction.NORTH;
-            if(absY == 1)
-            {
-              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.NORTH, 50);
-              return eat;
-            }
-            return action;
-          }		    	
-		    }
-		    System.out.println("no food");
-        
-      
-		}
-		action.type = AntActionType.MOVE;
+            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.EAST, 50);
+            return eat;
+          }
+          return action;
+        }
+        if (ant.gridY < foodpiece.gridY)
+        {
+          action.direction = Direction.SOUTH;
+          if (absY == 1)
+          {
+            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.SOUTH, 50);
+            return eat;
+          }
+          return action;
+        }
+        if (ant.gridX > foodpiece.gridX)
+        {
+          action.direction = Direction.WEST;
+          if (absX == 1)
+          {
+            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.WEST, 50);
+            return eat;
+          }
+          return action;
+        }
+        if (ant.gridY > foodpiece.gridY)
+        {
+          action.direction = Direction.NORTH;
+          if (absY == 1)
+          {
+            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.NORTH, 50);
+            return eat;
+          }
+          return action;
+        }
+      }
+      System.out.println("no food");
+    }
+    action.type = AntActionType.MOVE;
     action.direction = Direction.SOUTHEAST;
-		return action;
+    return action;
+  }
 
-	}
+  private static boolean underGround(AntData ant)
+  {
+    if (ant.underground)
+    {
+      switch (ant.antType)
+      {
+      case BASIC:
+        countBasic++;
+        break;
+      case ATTACK:
+        countAttack++;
+        break;
+      case VISION:
+        countVision++;
+        break;
+      case MEDIC:
+        countMedic++;
+        break;
+      case CARRY:
+        countCarry++;
+        break;
+      case SPEED:
+        countSpeed++;
+        break;
+      case DEFENCE:
+        countDefence++;
+        break;
+      default:
+        break;
+      }
+      return true;
+    }
+    return false;
+  }
 
-	private static boolean underGround(AntData ant)
-	{
+  private AntAction explore()
+  {
+    action.type = AntActionType.MOVE;
+    action.direction = Direction.NORTH;
+    return action;
+  }
 
-		if (ant.underground)
-		{
-			switch (ant.antType)
-			{
-			case BASIC:
-				countBasic++;
-				break;
-			case ATTACK:
-				countAttack++;
-				break;
-			case VISION:
-				countVision++;
-				break;
-			case MEDIC:
-				countMedic++;
-				break;
-			case CARRY:
-				countCarry++;
-				break;
-			case SPEED:
-				countSpeed++;
-				break;
-			case DEFENCE:
-				countDefence++;
-				break;
-			default:
-				break;
-			}
-			return true;
-		}
-		return false;
-	}
+  private AntAction findWater()
+  {
+    action.type = AntActionType.MOVE;
+    action.direction = Direction.EAST;
+    return action;
+  }
 
-	private AntAction explore()
-	{
-
-		action.type = AntActionType.MOVE;
-	    action.direction = Direction.NORTH;
-
-
-		return action;
-	}
-
-	private AntAction findWater()
-	{
-		action.type = AntActionType.MOVE;
-		action.direction = Direction.EAST;
-		return action;
-	}
-
-	private AntAction findFood()
-	{
-
-		action.type = AntActionType.MOVE;
-	    action.direction = Direction.NORTH;
-		//if(lt.)//found food!!
-		{
-		
-		}
-		return action;
-	}
-
+  private AntAction findFood()
+  {
+    action.type = AntActionType.MOVE;
+    action.direction = Direction.NORTH;
+    // if(lt.)//found food!!
+    {}
+    return action;
+  }
 }

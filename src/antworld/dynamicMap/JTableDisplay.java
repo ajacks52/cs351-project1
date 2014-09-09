@@ -4,11 +4,13 @@ package antworld.dynamicmap;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.*;
 
 import antworld.data.AntData;
 import antworld.data.CommData;
+import antworld.data.FoodData;
 
 public class JTableDisplay
 		extends 	JFrame
@@ -57,7 +59,12 @@ public class JTableDisplay
 	
 	public static void updateTable(CommData Cdata)
 	{
-		Object[] foodset = Cdata.foodSet.toArray();
+	
+		FoodData[] foodset = new FoodData[ Cdata.foodSet.size()];
+
+		
+		
+		
 		
 		for(int i = 0; i < Cdata.myAntList.size(); i++){
 			dataValues[i++][0] = Cdata.myAntList.get(i).toString();
@@ -71,9 +78,17 @@ public class JTableDisplay
 			
 			dataValues[i++][1] = sb.toString();	 
 		}
-		for(int i = 0; i < foodset.length; i++){
-			dataValues[i][2] = foodset[i++].toString();
-		}
+		int j = 0;
+		for (Iterator<FoodData> i = Cdata.foodSet.iterator(); i.hasNext();) {
+      FoodData element = i.next();
+      StringBuilder sb = new StringBuilder();
+      sb.append(element.gridX);
+      sb.append(",");
+      sb.append(element.gridY);
+      dataValues[j++][2] = sb.toString();
+      
+  }
+		
 		
 		table.repaint();
 	}

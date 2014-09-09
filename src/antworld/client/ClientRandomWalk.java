@@ -270,6 +270,7 @@ public class ClientRandomWalk
     // b146-76
     // DEIMOS
     // deimos.cs.unm.edu
+    // b146-28
     String serverHost = "b146-76.cs.unm.edu";
     if (args.length > 0)
       serverHost = args[0];
