@@ -12,12 +12,9 @@ import antworld.data.AntData;
 import antworld.data.AntType;
 import antworld.data.CommData;
 import antworld.data.Constants;
-import antworld.data.Direction;
 import antworld.data.FoodData;
-import antworld.data.FoodType;
 import antworld.data.NestNameEnum;
 import antworld.data.TeamNameEnum;
-import antworld.data.AntAction.AntActionType;
 import antworld.dynamicmap.Gui;
 import antworld.dynamicmap.JTableDisplay;
 
@@ -258,17 +255,17 @@ public class ClientRandomWalk
       AntAction action = AntLogic.chooseAction(commData, ant);
       ant.myAction = action;
       Gui.drawAnts(ant.gridX, ant.gridY);
-      JTableDisplay.updateTable(commData);
+      JTableDisplay.updateTableAnts(commData);
     }
     for (FoodData food : commData.foodSet)
     {
       Gui.drawFood(food.gridX, food.gridY);
-      JTableDisplay.updateTable(commData);
+      JTableDisplay.updateTableFood(commData);
     }
     for (AntData enemyAnts : commData.enemyAntSet)
     {
       Gui.drawAnts(enemyAnts.gridX, enemyAnts.gridY);
-      JTableDisplay.updateTable(commData);
+      JTableDisplay.updateTableEnemy(commData);
     }
   
   }
@@ -282,9 +279,9 @@ public class ClientRandomWalk
     // DEIMOS
     // deimos.cs.unm.edu
     // b146-28
-    String serverHost = "b146-76.cs.unm.edu";
-    if (args.length > 0)
-      serverHost = args[0];
+    // b146-71, b146-74 and b146-76.
+    String serverHost = "b146-74.cs.unm.edu";
+  
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 

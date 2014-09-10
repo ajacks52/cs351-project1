@@ -35,26 +35,31 @@ public class JTableDisplay extends JFrame
     this.setVisible(true);
   }
 
-  public static void updateTable(CommData Cdata)
+  public static void updateTableAnts(CommData Cdata)
   {
-    FoodData[] foodset = new FoodData[Cdata.foodSet.size()];
     StringBuilder sb = new StringBuilder();
-    
+    StringBuilder sb2 = new StringBuilder();
     for (int i = 0; i < Cdata.myAntList.size(); i++)
     {
       sb = new StringBuilder();
       sb.append(Cdata.myAntList.get(i).id);
       dataValues[i++][0] = sb.toString();
-    }
-    for (int i = 0; i < Cdata.myAntList.size(); i++)
-    {
-      sb = new StringBuilder();
-      sb.append(Cdata.myAntList.get(1).gridX);
-      sb.append(",");
-      sb.append(Cdata.myAntList.get(1).gridY);
+      
+      sb2 = new StringBuilder();
+      sb2.append(Cdata.myAntList.get(1).gridX);
+      sb2.append(",");
+      sb2.append(Cdata.myAntList.get(1).gridY);
       dataValues[i++][1] = sb.toString();
     }
+    table.repaint();
+  }
   
+  public static void updateTableFood(CommData Cdata)
+  {
+    
+    FoodData[] foodset = new FoodData[Cdata.foodSet.size()];
+    StringBuilder sb = new StringBuilder();
+
     for (Iterator<FoodData> i = Cdata.foodSet.iterator(); i.hasNext();)
     {
       int j = 0;
@@ -68,6 +73,13 @@ public class JTableDisplay extends JFrame
       sb.append(element.foodType.toString());
       dataValues[j++][2] = sb.toString();
     }
+   
+    table.repaint();
+  }
+  
+  public static void updateTableEnemy(CommData Cdata)
+  {
+    StringBuilder sb = new StringBuilder();
     for (Iterator<AntData> i = Cdata.enemyAntSet.iterator(); i.hasNext();)
     {
       int j = 0;
@@ -80,5 +92,36 @@ public class JTableDisplay extends JFrame
     }
     table.repaint();
   }
+  
+//  public static void updateTable(CommData Cdata)
+//  {
+//    FoodData[] foodset = new FoodData[Cdata.foodSet.size()];
+//    StringBuilder sb = new StringBuilder();
+//
+//    for (Iterator<FoodData> i = Cdata.foodSet.iterator(); i.hasNext();)
+//    {
+//      int j = 0;
+//      FoodData element = i.next();
+//      sb = new StringBuilder();
+//      sb.append(element.gridX);
+//      sb.append(",");
+//      sb.append(element.gridY);
+//      dataValues[j++][3] = sb.toString();
+//      sb = new StringBuilder();
+//      sb.append(element.foodType.toString());
+//      dataValues[j++][2] = sb.toString();
+//    }
+//    for (Iterator<AntData> i = Cdata.enemyAntSet.iterator(); i.hasNext();)
+//    {
+//      int j = 0;
+//      AntData element = i.next();
+//      sb = new StringBuilder();
+//      sb.append(element.gridX);
+//      sb.append(",");
+//      sb.append(element.gridY);
+//      dataValues[j++][4] = sb.toString();
+//    }
+//    table.repaint();
+//  }
 
 }

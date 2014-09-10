@@ -52,6 +52,7 @@ public class AntLogic
       return action;
     }
     // if() ant has food go home!!
+    action.direction = Direction.getRandomDir();
 
     
     drink.direction = Direction.SOUTHEAST;
@@ -66,7 +67,7 @@ public class AntLogic
     {
       if (absToNestY < 10)
       {
-       // System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
+        System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
         return drop;
       }
     }
