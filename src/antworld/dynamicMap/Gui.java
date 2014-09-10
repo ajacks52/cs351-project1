@@ -100,7 +100,6 @@ public class Gui extends Thread
       ourGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
           RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       ourGraphics.drawImage(bImage, 0, 0, dims.width, dims.height, this);
-      // super.paint(g);
     }
   }
 
@@ -119,17 +118,13 @@ public class Gui extends Thread
 
     public void mouseDragged(MouseEvent e)
     {
-      // new x and y are defined by current mouse location subtracted
-      // by previously processed mouse location
+
       int newX = e.getX() - lastOffsetX;
       int newY = e.getY() - lastOffsetY;
-      // increment last offset to last processed by drag event.
       lastOffsetX += newX;
       lastOffsetY += newY;
-      // update the canvas locations
       canvas.translateX += newX;
       canvas.translateY += newY;
-      // schedule a repaint.
       canvas.repaint();
     }
 
@@ -162,12 +157,8 @@ public class Gui extends Thread
     {
       if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
       {
-        // make it a reasonable amount of zoom
-        // .1 gives a nice slow transition
-        canvas.scale -= (.2 * e.getWheelRotation());
-        // don't cross negative threshold.
-        // also, setting scale to 0 has bad effects
-        canvas.scale = Math.max(0.00001, canvas.scale);
+        canvas.scale -= (.3 * e.getWheelRotation());
+        canvas.scale = Math.max(0.0001, canvas.scale);
         canvas.repaint();
       }
     }
@@ -184,7 +175,6 @@ public class Gui extends Thread
 
   static void erasePixels()
   {
-    //bImage = bImageErase;
     canvas.repaint();
   }
 

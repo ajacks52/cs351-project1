@@ -13,9 +13,7 @@ import antworld.data.LandType;
 
 public class AntLogic
 {
-  static CommData data;
   static AntData ant;
-  static AntAction action = new AntAction(AntActionType.STASIS);
   static int countBasic = 0;
   static int countMedic = 0;
   static int countVision = 0;
@@ -23,10 +21,16 @@ public class AntLogic
   static int countSpeed = 0;
   static int countDefence = 0;
   static int countAttack = 0;
+  
+  static AntAction drink = new AntAction(AntActionType.PICKUP, Direction.SOUTHEAST, 50);
+  static AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
+  static AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
+  static AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
+  static AntAction action = new AntAction(AntActionType.STASIS);
+
 
   public static AntAction chooseAction(CommData data, AntData ant)
   {
-    AntAction action = new AntAction(AntActionType.STASIS);
     if (ant.ticksUntilNextAction > 0)
     {
       return action;
@@ -48,10 +52,7 @@ public class AntLogic
       return action;
     }
     // if() ant has food go home!!
-    AntAction drink = new AntAction(AntActionType.PICKUP, Direction.SOUTHEAST, 50);
-    AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
-    AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
-    AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
+
     
     drink.direction = Direction.SOUTHEAST;
     drink.type = AntActionType.PICKUP;
@@ -65,7 +66,7 @@ public class AntLogic
     {
       if (absToNestY < 10)
       {
-        System.out.println("/n/n/n/n I am droppfing water!! /n//n/n/");
+       // System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
         return drop;
       }
     }
@@ -122,7 +123,7 @@ public class AntLogic
           return action;
         }
       }
-      System.out.println("no food");
+     // System.out.println("no food");
     }
     action.type = AntActionType.MOVE;
     action.direction = Direction.SOUTHEAST;

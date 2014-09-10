@@ -246,10 +246,15 @@ public class ClientRandomWalk
 
   private void chooseActionsOfAllAnts(CommData commData)
   {
-    for (int i = 0; i < commData.myAntList.size() - 2; i++) // pulls out all
-                                                            // ants but 2.
+    for (int i = 0; i < commData.myAntList.size() - 2; i++) // pulls out all ants but 2.                                             
     {
       AntData ant = commData.myAntList.get(i);
+      
+      if(ant.antType.equals(AntType.ATTACK))
+      {
+        // do stuff depending on what type of ant
+      }
+      
       AntAction action = AntLogic.chooseAction(commData, ant);
       ant.myAction = action;
       Gui.drawAnts(ant.gridX, ant.gridY);
@@ -260,6 +265,12 @@ public class ClientRandomWalk
       Gui.drawFood(food.gridX, food.gridY);
       JTableDisplay.updateTable(commData);
     }
+    for (AntData enemyAnts : commData.enemyAntSet)
+    {
+      Gui.drawAnts(enemyAnts.gridX, enemyAnts.gridY);
+      JTableDisplay.updateTable(commData);
+    }
+  
   }
 
   public static void main(String[] args)
