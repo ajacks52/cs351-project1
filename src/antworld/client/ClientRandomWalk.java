@@ -15,6 +15,7 @@ import antworld.data.Constants;
 import antworld.data.FoodData;
 import antworld.data.NestNameEnum;
 import antworld.data.TeamNameEnum;
+import antworld.dynamicmap.AnalyzeMap;
 import antworld.dynamicmap.Gui;
 import antworld.dynamicmap.JTableDisplay;
 
@@ -45,6 +46,20 @@ public class ClientRandomWalk
       isConnected = openConnection(host, portNumber);
     }
     myThreadGui = new antworld.dynamicmap.Gui(); // create gui
+    AnalyzeMap map = new AnalyzeMap();
+    while (map.done == false)
+    {
+      try
+      {
+        Thread.sleep(200);
+      }
+      catch (InterruptedException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+     System.out.println(AnalyzeMap.rgb[4][4]);
     myThreadGui.start();
     table = new JTableDisplay(); // create new table for info
     try
@@ -243,15 +258,14 @@ public class ClientRandomWalk
 
   private void chooseActionsOfAllAnts(CommData commData)
   {
-    for (int i = 0; i < commData.myAntList.size() - 2; i++) // pulls out all ants but 2.                                             
+    for (int i = 0; i < commData.myAntList.size() - 2; i++) // pulls out all
+                                                            // ants but 2.
     {
       AntData ant = commData.myAntList.get(i);
-      
-      if(ant.antType.equals(AntType.ATTACK))
+      if (ant.antType.equals(AntType.ATTACK))
       {
         // do stuff depending on what type of ant
       }
-      
       AntAction action = AntLogic.chooseAction(commData, ant);
       ant.myAction = action;
       Gui.drawAnts(ant.gridX, ant.gridY);
@@ -267,7 +281,6 @@ public class ClientRandomWalk
       Gui.drawAnts(enemyAnts.gridX, enemyAnts.gridY);
       JTableDisplay.updateTableEnemy(commData);
     }
-  
   }
 
   public static void main(String[] args)
@@ -280,8 +293,7 @@ public class ClientRandomWalk
     // deimos.cs.unm.edu
     // b146-28
     // b146-71, b146-74 and b146-76.
-    String serverHost = "b146-74.cs.unm.edu";
-  
+    String serverHost = "b146-71.cs.unm.edu";
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 

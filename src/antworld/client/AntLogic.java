@@ -1,6 +1,8 @@
 package antworld.client;
 
 import java.awt.Color;
+import java.util.ArrayList;
+
 import antworld.data.AntAction;
 import antworld.data.AntData;
 import antworld.data.AntType;
@@ -9,7 +11,10 @@ import antworld.data.Constants;
 import antworld.data.Direction;
 import antworld.data.AntAction.AntActionType;
 import antworld.data.FoodData;
+import antworld.data.FoodType;
 import antworld.data.LandType;
+import antworld.dynamicmap.AnalyzeMap;
+
 
 public class AntLogic
 {
@@ -21,13 +26,12 @@ public class AntLogic
   static int countSpeed = 0;
   static int countDefence = 0;
   static int countAttack = 0;
-  
   static AntAction drink = new AntAction(AntActionType.PICKUP, Direction.SOUTHEAST, 50);
   static AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
   static AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
   static AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
   static AntAction action = new AntAction(AntActionType.STASIS);
-
+  static ArrayList<Integer> eatten = new ArrayList<Integer>();
 
   public static AntAction chooseAction(CommData data, AntData ant)
   {
@@ -51,83 +55,98 @@ public class AntLogic
                                                    // astar!!!
       return action;
     }
-    // if() ant has food go home!!
-    action.direction = Direction.getRandomDir();
-
-    
-    drink.direction = Direction.SOUTHEAST;
-    drink.type = AntActionType.PICKUP;
-    
-    //if(true){return drink;}
-    
     int absToNestX = Math.abs(ant.gridX - ClientRandomWalk.getCenterX());
     int absToNestY = Math.abs(ant.gridY - ClientRandomWalk.getCenterY());
-    
-    if (absToNestX < 10)
+    if (ant.antType.equals(AntType.BASIC))
     {
-      if (absToNestY < 10)
+      if (ant.carryUnits > 0)
       {
-        System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
-        return drop;
+        if (absToNestX < 10 && absToNestY < 10)
+        {
+          System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
+          return drop;
+        }
+        return goHome; // astar
       }
-    }
-    if (ant.carryUnits > 0)
+    }// you dont have food..
+    // action.direction = Direction.getRandomDir();
+    // drink.direction = Direction.SOUTHEAST;
+    // drink.type = AntActionType.PICKUP;
+    // if(true){return drink;}
+    // find food near you
+    if (data.foodSet.size() > 0)
     {
-      return goHome;
-    }
-    
-    for (FoodData foodpiece : data.foodSet)
-    {
-      int absX = Math.abs(ant.gridX - foodpiece.gridX);
-      int absY = Math.abs(ant.gridY - foodpiece.gridY);
-      if (absX < 20 && absY < 20)
+      for (FoodData foodpiece : data.foodSet)
       {
-        action.type = AntActionType.MOVE;
-        if (ant.gridX < foodpiece.gridX)
+        for (int e : eatten)
         {
-          action.direction = Direction.EAST;
-          if (absX == 1)
+          if (foodpiece.hashCode() == e)
           {
-            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.EAST, 50);
-            return eat;
+            break;
           }
-          return action;
         }
-        if (ant.gridY < foodpiece.gridY)
+        eatten.add(foodpiece.hashCode());
+        int absfoodX = Math.abs(ant.gridX - foodpiece.gridX);
+        int absfoodY = Math.abs(ant.gridY - foodpiece.gridY);
+        if (absfoodX < 20 && absfoodY < 20)
         {
-          action.direction = Direction.SOUTH;
-          if (absY == 1)
+          action.type = AntActionType.MOVE;
+          if (ant.gridX < foodpiece.gridX)
           {
-            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.SOUTH, 50);
-            return eat;
+            action.direction = Direction.EAST;
+            if (absfoodX == 1)
+            {
+              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.EAST, 50);
+              return eat;
+            }
+            return action;
           }
-          return action;
-        }
-        if (ant.gridX > foodpiece.gridX)
-        {
-          action.direction = Direction.WEST;
-          if (absX == 1)
+          else if (ant.gridX > foodpiece.gridX)
           {
-            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.WEST, 50);
-            return eat;
+            action.direction = Direction.WEST;
+            if (absfoodX == 1)
+            {
+              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.WEST, 50);
+              return eat;
+            }
+            return action;
           }
-          return action;
-        }
-        if (ant.gridY > foodpiece.gridY)
-        {
-          action.direction = Direction.NORTH;
-          if (absY == 1)
+          if (ant.gridY < foodpiece.gridY)
           {
-            AntAction eat = new AntAction(AntActionType.PICKUP, Direction.NORTH, 50);
-            return eat;
+            action.direction = Direction.SOUTH;
+            if (absfoodY == 1)
+            {
+              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.SOUTH, 50);
+              return eat;
+            }
+            return action;
           }
-          return action;
+          else if (ant.gridY > foodpiece.gridY)
+          {
+            action.direction = Direction.NORTH;
+            if (absfoodY == 1)
+            {
+              AntAction eat = new AntAction(AntActionType.PICKUP, Direction.NORTH, 50);
+              return eat;
+            }
+            return action;
+          }
         }
       }
-     // System.out.println("no food");
+    }// no food near you find some!!
+    if(data.foodStockPile[FoodType.WATER.ordinal()] < 100)
+    {
+     
+     // if(antworld.client.ClientRandomWalk.map.rgb[ant.gridX+1][ant.gridY] == LandType.WATER)
+      {
+        
+      }
+      
+      action.type = AntActionType.MOVE;
+      action.direction = Direction.EAST;
     }
     action.type = AntActionType.MOVE;
-    action.direction = Direction.SOUTHEAST;
+    action.direction = Direction.getRandomDir();
     return action;
   }
 
