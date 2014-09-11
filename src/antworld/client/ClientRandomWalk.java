@@ -59,7 +59,7 @@ public class ClientRandomWalk
         e.printStackTrace();
       }
     }
-     System.out.println(AnalyzeMap.rgb[4][4]);
+
     myThreadGui.start();
     table = new JTableDisplay(); // create new table for info
     try
@@ -292,8 +292,8 @@ public class ClientRandomWalk
     // DEIMOS
     // deimos.cs.unm.edu
     // b146-28
-    // b146-71, b146-74 and b146-76.
-    String serverHost = "b146-71.cs.unm.edu";
+    // b146-71, b146-74 and b146-76. b146-26
+    String serverHost = "b146-26.cs.unm.edu";
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 
