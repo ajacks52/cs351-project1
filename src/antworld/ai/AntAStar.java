@@ -2,13 +2,19 @@ package antworld.ai;
 
 /**
 * @author 	Erin Sosebee
-* @version	2014.09.09
+* @version	2014.11.09
 */
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+//import antworld.dynamicmap.AnalyzeMap;
 
 public class AntAStar
 {
+//	static AnalyzeMap map = new AnalyzeMap();
+	
+	// TODO: 
 	// Currently uses this board that I created. Need to load provided map instead
 	int board[][] =
 		{
@@ -29,6 +35,9 @@ public class AntAStar
 	int mapHeight = 9;
 	int cellWidth = 32;
 	int cellHeight = 24;
+	
+//	int mapWidth = img.getWidth();
+//	int mapHeight = img.getHeight();
 
 	int startX, startY, destX, destY;
 
@@ -66,6 +75,8 @@ public class AntAStar
 		int startY = y1;
 		int endX = x2;
 		int endY = y2;
+		
+		path.add(new Node(endX, endY));
 		
 		while (exit == false)
 		{
@@ -291,24 +302,44 @@ public class AntAStar
 	}
 
 	/**
-	 * 
+	 * Gets the path the ant has to travel to get to its destination.
 	 */
-	public void getPath()
+	public ArrayList<String> getPath()
 	{
-		System.out.println("path: ");
-		for (int i = 0; i < path.size(); i++)
+		Collections.reverse(path);
+		ArrayList<String> directions = new ArrayList<String>();
+		
+		for (int i = 1; i < path.size(); i++)
 		{
-			// TODO: do stuff with the path here
-			// note: the path only contains the points between the first and the last
-			System.out.println(path.get(i).getX() + "," + path.get(i).getY());
+			int tempX = path.get(i-1).getX();
+			int tempY = path.get(i-1).getY();
+			int x = path.get(i).getX();
+			int y = path.get(i).getY();
+
+			if (x == tempX && y > tempY) directions.add("NORTH");
+			else if (x == tempX && y < tempY) directions.add("SOUTH");
+			else if (x == tempX + 1 && y == tempY) directions.add("EAST");
+			else if (x == tempX - 1 && y == tempY) directions.add("WEST");
+			else if (x == tempX - 1 && y == tempY + 1) directions.add("NORTHWEST");
+			else if (x == tempX + 1 && y == tempY + 1) directions.add("NORTHEAST");
+			else if (x == tempX + 1 && y == tempY - 1) directions.add("SOUTHEAST");
+			else if (x == tempX - 1 && y == tempY - 1) directions.add("SOUTHWEST");
 		}
+		
+//		System.out.println("path: ");
+//		for (int i = 0; i < directions.size(); i++)
+//		{
+//			System.out.println(path.get(i).getX() + "," + path.get(i).getY());
+//			System.out.println(directions.get(i));
+//		}
+		return directions;
 	}
 	
 	/**
 	 * main
 	 */
-	public static void main(String[] args)
-	{
-		new AntAStar(0,1,1,3).getPath();
-	}
+//	public static void main(String[] args)
+//	{
+//		new AntAStar(1,2,2,5).getPath();
+//	}
 }
