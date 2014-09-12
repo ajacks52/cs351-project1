@@ -14,6 +14,9 @@ import antworld.data.FoodData;
 import antworld.data.FoodType;
 import antworld.data.LandType;
 import antworld.dynamicmap.AnalyzeMap;
+// AI
+import antworld.ai.AntAStar;
+import antworld.ai.Node;
 
 
 public class AntLogic
@@ -32,6 +35,8 @@ public class AntLogic
   static AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
   static AntAction action = new AntAction(AntActionType.STASIS);
   static ArrayList<Integer> eatten = new ArrayList<Integer>();
+  // TODO: don't know if I should use coordinates or directions to represent the path
+  public static ArrayList<String> path = new ArrayList<String>();
 
   public static AntAction chooseAction(CommData data, AntData ant)
   {
@@ -39,6 +44,7 @@ public class AntLogic
     {
       return action;
     }
+    
     if (underGround(ant))
     {
       action.type = AntActionType.EXIT_NEST;
@@ -48,15 +54,71 @@ public class AntLogic
           + Constants.random.nextInt(2 * Constants.NEST_RADIUS);
       return action;
     }
+    
     if (ant.health < ant.antType.getMaxHealth() / 2)
     {
       action.type = AntActionType.MOVE;
-      action.direction = Direction.getRandomDir(); // location of base told by
+      
+      // TODO: get ant to travel path to nest
+      //action.direction = Direction.getRandomDir(); // location of base told by
                                                    // astar!!!
+      path = new AntAStar(ant.gridX, ant.gridY, 
+      		ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY()).getPath();
+      
+      // TODO: not sure if I want to use coordinates or directions here
+      //			 not even sure if this is correct
+      //			 how do we tell the ant which direction to go?
+      // leaving this next part commented out for now
+//      for (int i = 0; i < path.size(); i++)
+//      {
+//      	if (path.get(i).equals("NORTH")) 
+//      	{
+//      		action.direction = Direction.NORTH;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("SOUTH")) 
+//      	{
+//      		action.direction = Direction.SOUTH;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("EAST")) 
+//      	{
+//      		action.direction = Direction.EAST;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("WEST")) 
+//      	{
+//      		action.direction = Direction.WEST;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("NORTHEAST")) 
+//      	{
+//      		action.direction = Direction.NORTHEAST;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("NORTHWEST")) 
+//      	{
+//      		action.direction = Direction.NORTHWEST;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("SOUTHEAST")) 
+//      	{
+//      		action.direction = Direction.SOUTHEAST;
+//      		return action;
+//      	}
+//      	else if (path.get(i).equals("SOUTHWEST")) 
+//      	{
+//      		action.direction = Direction.SOUTHWEST;
+//      		return action;
+//      	}
+//      }
       return action;
     }
+    
+    // Distance to nest
     int absToNestX = Math.abs(ant.gridX - ClientRandomWalk.getCenterX());
     int absToNestY = Math.abs(ant.gridY - ClientRandomWalk.getCenterY());
+    
     if (ant.antType.equals(AntType.BASIC))
     {
       if (ant.carryUnits > 0)
@@ -66,14 +128,22 @@ public class AntLogic
           System.out.println("/n/n/n/n I am dropping water!! /n//n/n/");
           return drop;
         }
-        return goHome; // astar
+        // TODO: changes made here
+        // Path that the ant needs to travel
+        // NOTE: AntAStar still needs to load in the map somehow
+        path = new AntAStar(ant.gridX, ant.gridY, 
+        		ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY()).getPath();
+        //return goHome; // astar
       }
-    }// you dont have food..
+    }
+    
+    // you dont have food..
     // action.direction = Direction.getRandomDir();
     // drink.direction = Direction.SOUTHEAST;
     // drink.type = AntActionType.PICKUP;
     // if(true){return drink;}
     // find food near you
+    
     if (data.foodSet.size() > 0)
     {
       for (FoodData foodpiece : data.foodSet)
@@ -85,9 +155,24 @@ public class AntLogic
             break;
           }
         }
+        
         eatten.add(foodpiece.hashCode());
+        
+        // Distance to food
         int absfoodX = Math.abs(ant.gridX - foodpiece.gridX);
         int absfoodY = Math.abs(ant.gridY - foodpiece.gridY);
+        
+        // TODO: left all your stuff in for now, but we might want to replace
+        //			 all this stuff with astar
+        // So, for example:
+        /*
+        if (absfoodX < 20 && absfoodY < 20)
+        {
+        	action.type = AntActionType.MOVE;
+        	// have ant travel along astar path
+        	path = new AntAStar(ant.gridX, ant.gridY, foodpiece.gridX, foodpiece.gridY).getPath();
+        }
+        */
         if (absfoodX < 20 && absfoodY < 20)
         {
           action.type = AntActionType.MOVE;
@@ -133,14 +218,16 @@ public class AntLogic
           }
         }
       }
-    }// no food near you find some!!
+    }
+    
+    // no food near you find some!!
     if(data.foodStockPile[FoodType.WATER.ordinal()] < 100)
     {
      
      // if(antworld.client.ClientRandomWalk.map.rgb[ant.gridX+1][ant.gridY] == LandType.WATER)
-      {
-        
-      }
+//      {
+//        
+//      }
       
       action.type = AntActionType.MOVE;
       action.direction = Direction.EAST;
@@ -204,7 +291,7 @@ public class AntLogic
     action.type = AntActionType.MOVE;
     action.direction = Direction.NORTH;
     // if(lt.)//found food!!
-    {}
+    //{}
     return action;
   }
 }
