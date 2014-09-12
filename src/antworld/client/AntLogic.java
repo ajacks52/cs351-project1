@@ -36,6 +36,7 @@ public class AntLogic
   static AntAction action = new AntAction(AntActionType.STASIS);
   static ArrayList<Integer> eatten = new ArrayList<Integer>();
   // TODO: don't know if I should use coordinates or directions to represent the path
+  // TODO: try using directions that way it wont require conversion at a later time..
   public static ArrayList<String> path = new ArrayList<String>();
 
   public static AntAction chooseAction(CommData data, AntData ant)
@@ -64,6 +65,14 @@ public class AntLogic
                                                    // astar!!!
       path = new AntAStar(ant.gridX, ant.gridY, 
       		ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY()).getPath();
+      
+      // TODO From Adam: So what I was thinking is astar will for each ant find it's next direction. 
+      // This may take a while to do this type a computation for each ant. 
+      //
+      // Maybe a better idea would be to calculate the whole astar once and then store the 
+      // paths in an array and just walk through that arraylist or a queue and at each step and delete 
+      // the first direction from the queue and that is the ants next direction.  I don't know if this 
+      // makes any sense... lol 
       
       // TODO: not sure if I want to use coordinates or directions here
       //			 not even sure if this is correct
@@ -134,6 +143,8 @@ public class AntLogic
         path = new AntAStar(ant.gridX, ant.gridY, 
         		ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY()).getPath();
         //return goHome; // astar
+        // TODO From Adam: What deos .getPath() do?? 
+        
       }
     }
     
@@ -173,6 +184,8 @@ public class AntLogic
         	path = new AntAStar(ant.gridX, ant.gridY, foodpiece.gridX, foodpiece.gridY).getPath();
         }
         */
+        // TODO From Adam yes that sounds great!! Once astar works lol 
+        
         if (absfoodX < 20 && absfoodY < 20)
         {
           action.type = AntActionType.MOVE;
@@ -272,6 +285,7 @@ public class AntLogic
     return false;
   }
 
+  // TODO THESE METHODS I MADE BELOW ARE USELESS THEY CAN BE DELETED LOL 
   private AntAction explore()
   {
     action.type = AntActionType.MOVE;
