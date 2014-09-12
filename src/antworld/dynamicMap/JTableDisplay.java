@@ -43,13 +43,13 @@ public class JTableDisplay extends JFrame
     {
       sb = new StringBuilder();
       sb.append(Cdata.myAntList.get(i).id);
-      dataValues[i++][0] = sb.toString();
+      dataValues[i][0] = sb.toString();
       
       sb2 = new StringBuilder();
       sb2.append(Cdata.myAntList.get(1).gridX);
       sb2.append(",");
       sb2.append(Cdata.myAntList.get(1).gridY);
-      dataValues[i++][1] = sb.toString();
+      dataValues[i][1] = sb.toString();
     }
     table.repaint();
   }
@@ -68,7 +68,7 @@ public class JTableDisplay extends JFrame
       sb.append(element.gridX);
       sb.append(",");
       sb.append(element.gridY);
-      dataValues[j++][3] = sb.toString();
+      dataValues[j][3] = sb.toString();
       sb = new StringBuilder();
       sb.append(element.foodType.toString());
       dataValues[j++][2] = sb.toString();
@@ -80,9 +80,9 @@ public class JTableDisplay extends JFrame
   public static void updateTableEnemy(CommData Cdata)
   {
     StringBuilder sb = new StringBuilder();
+    int j = 0;
     for (Iterator<AntData> i = Cdata.enemyAntSet.iterator(); i.hasNext();)
     {
-      int j = 0;
       AntData element = i.next();
       sb = new StringBuilder();
       sb.append(element.gridX);
