@@ -36,7 +36,7 @@ public class ClientRandomWalk
   private Socket clientSocket;
   
   // Nest info
-  private NestNameEnum myNestName = null;
+  private NestNameEnum myNestName = NestNameEnum.GUEST;
   private static int centerX;
   private static int centerY;
   
