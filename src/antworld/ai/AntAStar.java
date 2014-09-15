@@ -1,5 +1,7 @@
 package antworld.ai;
 
+package antworld.ai;
+
 /**
 * @author 	Erin Sosebee
 * @version	2014.11.09
@@ -15,6 +17,7 @@ import javax.imageio.ImageIO;
 
 import antworld.dynamicmap.AnalyzeMap;
 import antworld.data.Direction;
+import antworld.data.LandType;
 
 //import antworld.dynamicmap.AnalyzeMap;
 
@@ -209,6 +212,14 @@ public class AntAStar
 			{
 				if (inClosed(newX, newY) == false)
 				{
+					if (map[newY][newX].getRed() == 0 && map[newY][newX].getBlue() == 0 &&
+							map[newY][newX].getGreen() > 0)
+					{
+						int newG = tempG + 1;
+						int newH = getDistance(newX, newY, destX, destY);
+						int newF = newG +  newH;
+						open.add(new Node(newX, newY, newG, newH, newF, tempX, tempY));
+					}
 					// TODO: need to get the H values to calculate based on land type colors
 //					if (map[newY][newX] == 0)
 //					{
