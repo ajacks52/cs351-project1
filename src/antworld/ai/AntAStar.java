@@ -1,10 +1,8 @@
 package antworld.ai;
 
-package antworld.ai;
-
 /**
 * @author 	Erin Sosebee
-* @version	2014.11.09
+* @version	2014.15.09
 */
 
 import java.util.ArrayList;
