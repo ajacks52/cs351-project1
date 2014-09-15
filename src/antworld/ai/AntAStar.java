@@ -7,37 +7,43 @@ package antworld.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+import antworld.dynamicmap.AnalyzeMap;
+import antworld.data.Direction;
 
 //import antworld.dynamicmap.AnalyzeMap;
 
 public class AntAStar
 {
-//	static AnalyzeMap map = new AnalyzeMap();
-	
+	BufferedImage img = null;
+	Color[][] map;
 	// TODO: 
 	// Currently uses this board that I created. Need to load provided map instead
-	int board[][] =
-		{
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		  { 0, 1, 1, 1, 0, 1, 1, 0, 1, 0 },
-		  { 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
-		  { 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
-		  { 1, 0, 1, 1, 0, 0, 0, 1, 0, 0 },
-		  { 1, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
-		  { 0, 0, 0, 1, 0, 1, 0, 1, 0, 0 },
-		  { 0, 0, 1, 1, 0, 1, 0, 1, 0, 0 },
-		  { 0, 0, 0, 0, 1, 1, 0, 1, 1, 0 },
-		  { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 } 
-		};
+//	int board[][] =
+//		{
+//			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//		  { 0, 1, 1, 1, 0, 1, 1, 0, 1, 0 },
+//		  { 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
+//		  { 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
+//		  { 1, 0, 1, 1, 0, 0, 0, 1, 0, 0 },
+//		  { 1, 0, 0, 1, 0, 1, 0, 0, 0, 0 },
+//		  { 0, 0, 0, 1, 0, 1, 0, 1, 0, 0 },
+//		  { 0, 0, 1, 1, 0, 1, 0, 1, 0, 0 },
+//		  { 0, 0, 0, 0, 1, 1, 0, 1, 1, 0 },
+//		  { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 } 
+//		};
+	
 	
 	// TODO: Don't want hard-coded values here
-	int mapWidth = 9;
-	int mapHeight = 9;
-	int cellWidth = 32;
-	int cellHeight = 24;
-	
-//	int mapWidth = img.getWidth();
-//	int mapHeight = img.getHeight();
+//	int mapWidth = 9;
+//	int mapHeight = 9;
+	int mapWidth;
+	int mapHeight;
 
 	int startX, startY, destX, destY;
 
@@ -55,6 +61,19 @@ public class AntAStar
 		this.startY = startY;
 		this.destX = destX;
 		this.destY = destY;
+		
+		try
+		{
+			img = ImageIO.read(new File("resources/AntWorld.png"));
+		}
+		catch (IOException e) {}
+		
+		mapHeight = img.getHeight();
+		mapWidth = img.getWidth();
+		
+		map = new AnalyzeMap().getRGB();
+//		System.out.println(map.length);
+		
 //		System.out.println(startX + "," + startY + "," + destX + "," + destY);
 		findPath(startX, startY, destX, destY);
 	}
@@ -190,13 +209,14 @@ public class AntAStar
 			{
 				if (inClosed(newX, newY) == false)
 				{
-					if (board[newY][newX] == 0)
-					{
-						int newG = tempG + 1;
-						int newH = getDistance(newX, newY, destX, destY);
-						int newF = newG + newH;
-						open.add(new Node(newX, newY, newG, newH, newF, tempX, tempY));
-					}
+					// TODO: need to get the H values to calculate based on land type colors
+//					if (map[newY][newX] == 0)
+//					{
+//						int newG = tempG + 1;
+//						int newH = getDistance(newX, newY, destX, destY);
+//						int newF = newG + newH;
+//						open.add(new Node(newX, newY, newG, newH, newF, tempX, tempY));
+//					}
 				}
 			}
 		}
@@ -304,10 +324,10 @@ public class AntAStar
 	/**
 	 * Gets the path the ant has to travel to get to its destination.
 	 */
-	public ArrayList<String> getPath()
+	public ArrayList<Direction> getPath()
 	{
 		Collections.reverse(path);
-		ArrayList<String> directions = new ArrayList<String>();
+		ArrayList<Direction> directions = new ArrayList<Direction>();
 		
 		for (int i = 1; i < path.size(); i++)
 		{
@@ -316,14 +336,14 @@ public class AntAStar
 			int x = path.get(i).getX();
 			int y = path.get(i).getY();
 
-			if (x == tempX && y > tempY) directions.add("NORTH");
-			else if (x == tempX && y < tempY) directions.add("SOUTH");
-			else if (x == tempX + 1 && y == tempY) directions.add("EAST");
-			else if (x == tempX - 1 && y == tempY) directions.add("WEST");
-			else if (x == tempX - 1 && y == tempY + 1) directions.add("NORTHWEST");
-			else if (x == tempX + 1 && y == tempY + 1) directions.add("NORTHEAST");
-			else if (x == tempX + 1 && y == tempY - 1) directions.add("SOUTHEAST");
-			else if (x == tempX - 1 && y == tempY - 1) directions.add("SOUTHWEST");
+			if (x == tempX && y > tempY) directions.add(Direction.NORTH);
+			else if (x == tempX && y < tempY) directions.add(Direction.SOUTH);
+			else if (x == tempX + 1 && y == tempY) directions.add(Direction.EAST);
+			else if (x == tempX - 1 && y == tempY) directions.add(Direction.WEST);
+			else if (x == tempX - 1 && y == tempY + 1) directions.add(Direction.NORTHWEST);
+			else if (x == tempX + 1 && y == tempY + 1) directions.add(Direction.NORTHEAST);
+			else if (x == tempX + 1 && y == tempY - 1) directions.add(Direction.SOUTHEAST);
+			else if (x == tempX - 1 && y == tempY - 1) directions.add(Direction.SOUTHWEST);
 		}
 		
 //		System.out.println("path: ");
