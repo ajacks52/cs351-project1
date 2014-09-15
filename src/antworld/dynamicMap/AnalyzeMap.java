@@ -17,7 +17,8 @@ public class AnalyzeMap
 {
   BufferedImage img = null;
   private CommData commD;
-  public static int rgb[][] = null;
+//  public static int rgb[][] = null;
+  public static Color rgb[][];
   public boolean done = false;
   final Color UNKNOWN = Color.decode("0x0000C0");
   final Color WATER = Color.decode("0x0000C8");
@@ -37,6 +38,7 @@ public class AnalyzeMap
     }
     catch (IOException e)
     {}
+    
     System.out.println(" STARTED! ");
     findRGB();
     System.out.println(" DONE! ");
@@ -46,21 +48,45 @@ public class AnalyzeMap
   private void findRGB()
   {
     int i = 0;
-    rgb = new int[img.getWidth()][img.getHeight()];
+    rgb = new Color[img.getHeight()][img.getWidth()];
     for (int y = 0; y < img.getHeight(); y++)
     {
       for (int x = 0; x < img.getWidth(); x++, i++)
       {
-        rgb[x][y] = img.getRGB(x, y); // x, y
-        // System.out.printf("%,d, %d\n,", i, rgb[x][y]); // takes very
+      	int rgbVal = img.getRGB(x, y);
+      	Color color = new Color(rgbVal, true);
+      	color = new Color(255 - color.getRed(),
+      			255 - color.getGreen(), 255 - color.getBlue());
+      	rgb[y][x] = color;
+//      	System.out.println(col);
+//        rgb[x][y] = img.getRGB(x, y); // x, y
+//         System.out.printf("%,d, %d\n,", i, rgb[y][x]); // takes very
         // long like 5 minutes when i ask it to print while it's reading
         // in the array
       }
     }
   }
-
-  public static void main(String[] args)
+  
+  /**
+   * Returns the 2D array representing the colors of the map.
+   */
+  public Color[][] getRGB()
   {
-    // AnalyzeMap map = new AnalyzeMap();
+  	return rgb;
   }
+
+  public int getWidth()
+  {
+  	return img.getWidth();
+  }
+  
+  public int getHeight()
+  {
+  	return img.getHeight();
+  }
+  
+//  public static void main(String[] args)
+//  {
+//     new AnalyzeMap();
+//  }
 }
