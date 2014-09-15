@@ -33,14 +33,15 @@ public class AntLogic
   static AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
   static AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
   static AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
-  static AntAction action = new AntAction(AntActionType.STASIS);
   static ArrayList<Integer> eatten = new ArrayList<Integer>();
   // TODO: don't know if I should use coordinates or directions to represent the path
   // TODO: try using directions that way it wont require conversion at a later time..
   public static ArrayList<String> path = new ArrayList<String>();
 
   public static AntAction chooseAction(CommData data, AntData ant)
-  {
+  {   
+    AntAction action = new AntAction(AntActionType.STASIS);
+
     if (ant.ticksUntilNextAction > 0)
     {
       return action;
@@ -285,27 +286,5 @@ public class AntLogic
     return false;
   }
 
-  // TODO THESE METHODS I MADE BELOW ARE USELESS THEY CAN BE DELETED LOL 
-  private AntAction explore()
-  {
-    action.type = AntActionType.MOVE;
-    action.direction = Direction.NORTH;
-    return action;
-  }
-
-  private AntAction findWater()
-  {
-    action.type = AntActionType.MOVE;
-    action.direction = Direction.EAST;
-    return action;
-  }
-
-  private AntAction findFood()
-  {
-    action.type = AntActionType.MOVE;
-    action.direction = Direction.NORTH;
-    // if(lt.)//found food!!
-    //{}
-    return action;
-  }
+ 
 }

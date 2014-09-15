@@ -22,28 +22,22 @@ import antworld.dynamicmap.JTableDisplay;
 public class ClientRandomWalk
 {
   private static final boolean DEBUG = false;
-  
   // Login info
   private static final TeamNameEnum myTeam = TeamNameEnum.SpikeDropseed;
   private static final long password = 77265157773L;
-  
   // I/O streams
   private ObjectInputStream inputStream = null;
   private ObjectOutputStream outputStream = null;
-  
   // Connecting
   private boolean isConnected = false;
   private Socket clientSocket;
-  
   // Nest info
-  private NestNameEnum myNestName = NestNameEnum.GUEST;
+  private NestNameEnum myNestName = null;
   private static int centerX;
   private static int centerY;
-  
   // Graphics
   Gui myThreadGui;
   JTableDisplay table;
-  
   private static Random random = Constants.random;
 
   public ClientRandomWalk(String host, int portNumber)
@@ -54,7 +48,6 @@ public class ClientRandomWalk
     {
       isConnected = openConnection(host, portNumber);
     }
-    
     myThreadGui = new antworld.dynamicmap.Gui(); // create gui
     AnalyzeMap map = new AnalyzeMap();
     while (map.done == false)
@@ -68,7 +61,6 @@ public class ClientRandomWalk
         e.printStackTrace();
       }
     }
-
     myThreadGui.start();
     table = new JTableDisplay(); // create new table for info
     try
@@ -79,7 +71,6 @@ public class ClientRandomWalk
     {
       e.printStackTrace();
     }
-   
     CommData data = chooseNest();
     mainGameLoop(data);
     closeAll();
@@ -124,8 +115,10 @@ public class ClientRandomWalk
     {
       try
       {
-        if (outputStream != null) outputStream.close();
-        if (inputStream != null) inputStream.close();
+        if (outputStream != null)
+          outputStream.close();
+        if (inputStream != null)
+          inputStream.close();
         clientSocket.close();
       }
       catch (IOException e)
@@ -144,20 +137,21 @@ public class ClientRandomWalk
       {
         Thread.sleep(100);
       }
-      catch (InterruptedException e1) {}
-      
-      NestNameEnum requestedNest = NestNameEnum.values()[random.nextInt(NestNameEnum.SIZE)];
+      catch (InterruptedException e1)
+      {}
+      NestNameEnum requestedNest = NestNameEnum.GUEST;
       CommData data = new CommData(requestedNest, myTeam);
       data.password = password;
       if (sendCommData(data))
       {
         try
         {
-          if (DEBUG) System.out.println("ClientRandomWalk: listening to socket....");
+          if (DEBUG)
+            System.out.println("ClientRandomWalk: listening to socket....");
           CommData recvData = (CommData) inputStream.readObject();
           if (DEBUG)
           {
-          	System.out.println("ClientRandomWalk: recived <<<<<<<<<" + inputStream.available()
+            System.out.println("ClientRandomWalk: recived <<<<<<<<<" + inputStream.available()
                 + "<...\n" + recvData);
           }
           if (recvData.errorMsg != null)
@@ -202,19 +196,15 @@ public class ClientRandomWalk
         outputStream.writeObject(sendData);
         outputStream.flush();
         outputStream.reset();
-        
-        if (DEBUG) System.out.println("ClientRandomWalk: listening to socket....");
-        
+        if (DEBUG)
+          System.out.println("ClientRandomWalk: listening to socket....");
         CommData recivedData = (CommData) inputStream.readObject();
-        
         if (DEBUG)
         {
           System.out.println("ClientRandomWalk: received <<<<<<<<<" + inputStream.available() + "<...\n"
               + recivedData);
         }
-        
         data = recivedData;
-        
         if ((myNestName == null) || (data.myTeam != myTeam))
         {
           System.err.println("ClientRandomWalk: !!!!ERROR!!!! " + myNestName);
@@ -228,7 +218,8 @@ public class ClientRandomWalk
         {
           Thread.sleep(1000);
         }
-        catch (InterruptedException e1) {}
+        catch (InterruptedException e1)
+        {}
       }
       catch (ClassNotFoundException e)
       {
@@ -238,7 +229,8 @@ public class ClientRandomWalk
         {
           Thread.sleep(1000);
         }
-        catch (InterruptedException e1) {}
+        catch (InterruptedException e1)
+        {}
       }
     }
   }
@@ -248,7 +240,8 @@ public class ClientRandomWalk
     CommData sendData = data.packageForSendToServer();
     try
     {
-      if (DEBUG) System.out.println("ClientRandomWalk.sendCommData(" + sendData + ")");
+      if (DEBUG)
+        System.out.println("ClientRandomWalk.sendCommData(" + sendData + ")");
       outputStream.writeObject(sendData);
       outputStream.flush();
       outputStream.reset();
@@ -280,8 +273,11 @@ public class ClientRandomWalk
       }
       AntAction action = AntLogic.chooseAction(commData, ant);
       ant.myAction = action;
-      Gui.drawAnts(ant.gridX, ant.gridY);
-      JTableDisplay.updateTableAnts(commData);
+      if (!action.type.equals(AntAction.AntActionType.STASIS))
+      {
+        Gui.drawAnts(ant.gridX, ant.gridY);
+        JTableDisplay.updateTableAnts(commData);
+      }
     }
     for (FoodData food : commData.foodSet)
     {

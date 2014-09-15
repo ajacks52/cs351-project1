@@ -180,10 +180,10 @@ public class Gui extends Thread
 
   public static void drawAnts(int x, int y)
   {
-    rgb = Color.ORANGE.getRGB();
+    rgb = Color.RED.getRGB();
     bImage.setRGB(x, y, rgb);
     
-  //  canvas.repaint();
+    canvas.repaint();
   }
 
   public static void drawFood(int x, int y)
