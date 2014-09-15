@@ -36,10 +36,11 @@ public class AntLogic
   static ArrayList<Integer> eatten = new ArrayList<Integer>();
   // TODO: don't know if I should use coordinates or directions to represent the path
   // TODO: try using directions that way it wont require conversion at a later time..
-  public static ArrayList<String> path = new ArrayList<String>();
+  public static ArrayList<Direction> path = new ArrayList<Direction>();
 
   public static AntAction chooseAction(CommData data, AntData ant)
-  {   
+  {
+    
     AntAction action = new AntAction(AntActionType.STASIS);
 
     if (ant.ticksUntilNextAction > 0)
