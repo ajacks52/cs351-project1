@@ -15,13 +15,12 @@ public class AnalyzeMap
   public static Color rgb[][] = null;
   public boolean done = false;
 
-
   /** Constructor */
   public AnalyzeMap()
   {
     try
     {
-      img = ImageIO.read(new File("resources/AntWorld.png"));
+      img = ImageIO.read(new File("resources/AntWorld2.png"));
     }
     catch (IOException e) {}
     
@@ -49,7 +48,7 @@ public class AnalyzeMap
   }
   
   /**
-   * @return a 2D array representing the colors of the map.
+   * @return a 2D array representing the colors at each pixel of the map.
    */
   public Color[][] getRGB()
   {
