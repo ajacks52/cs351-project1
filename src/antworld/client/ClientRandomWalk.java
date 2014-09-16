@@ -304,7 +304,8 @@ public class ClientRandomWalk
     // deimos.cs.unm.edu
     // b146-28
     // b146-71, b146-74 and b146-76. b146-26
-    String serverHost = "b146-33.cs.unm.edu";
+    // TODO: OUR SERVER
+    String serverHost = "b146-72.cs.unm.edu";
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 
