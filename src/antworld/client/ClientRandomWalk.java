@@ -1,5 +1,6 @@
 package antworld.client;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Random;
 
+// Data
 import antworld.data.AntAction;
 import antworld.data.AntData;
 import antworld.data.AntType;
@@ -15,6 +17,8 @@ import antworld.data.Constants;
 import antworld.data.FoodData;
 import antworld.data.NestNameEnum;
 import antworld.data.TeamNameEnum;
+
+// GUI
 import antworld.dynamicmap.AnalyzeMap;
 import antworld.dynamicmap.Gui;
 import antworld.dynamicmap.JTableDisplay;
@@ -39,7 +43,9 @@ public class ClientRandomWalk
   Gui myThreadGui;
   JTableDisplay table;
   private static Random random = Constants.random;
-
+  // TODO:
+  static AnalyzeMap map;
+  
   public ClientRandomWalk(String host, int portNumber)
   {
     System.out.println("Starting ClientRandomWalk: " + System.currentTimeMillis());
@@ -49,7 +55,7 @@ public class ClientRandomWalk
       isConnected = openConnection(host, portNumber);
     }
     myThreadGui = new antworld.dynamicmap.Gui(); // create gui
-    AnalyzeMap map = new AnalyzeMap();
+    map = new AnalyzeMap();
     while (map.done == false)
     {
       try
@@ -115,10 +121,8 @@ public class ClientRandomWalk
     {
       try
       {
-        if (outputStream != null)
-          outputStream.close();
-        if (inputStream != null)
-          inputStream.close();
+        if (outputStream != null) outputStream.close();
+        if (inputStream != null) inputStream.close();
         clientSocket.close();
       }
       catch (IOException e)
@@ -137,8 +141,7 @@ public class ClientRandomWalk
       {
         Thread.sleep(100);
       }
-      catch (InterruptedException e1)
-      {}
+      catch (InterruptedException e1) {}
       NestNameEnum requestedNest = NestNameEnum.GUEST;
       CommData data = new CommData(requestedNest, myTeam);
       data.password = password;
@@ -301,10 +304,19 @@ public class ClientRandomWalk
     // deimos.cs.unm.edu
     // b146-28
     // b146-71, b146-74 and b146-76. b146-26
-    String serverHost = "b146-26.cs.unm.edu";
+    String serverHost = "b146-33.cs.unm.edu";
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 
+  /**
+   * Returns a 2D array representing the colors at each pixel of the map.
+   * @return 2D Color array
+   */
+  public static Color[][] getMap()
+  {
+    return map.getRGB();
+  }
+  
   public static int getCenterX()
   {
     return centerX;
