@@ -2,6 +2,11 @@ package antworld.client;
 
 import java.awt.Color;
 import java.util.ArrayList;
+
+// Client
+import antworld.client.ClientRandomWalk;
+
+// Data
 import antworld.data.AntAction;
 import antworld.data.AntData;
 import antworld.data.AntType;
@@ -11,9 +16,9 @@ import antworld.data.Direction;
 import antworld.data.AntAction.AntActionType;
 import antworld.data.FoodData;
 import antworld.data.FoodType;
+
 // AI
 import antworld.ai.AntAStar;
-import antworld.ai.Node;
 
 public class AntLogic
 {
@@ -22,11 +27,13 @@ public class AntLogic
   static ArrayList<Direction> path = new ArrayList<Direction>();
   static ArrayList<AntAStar> listofpaths = new ArrayList<AntAStar>();
   static ArrayList<ArrayList> listofdirs = new ArrayList<ArrayList>();
+  // TODO:
+  static Color[][] map = ClientRandomWalk.getMap(); // Map of colors
 
   /**
    * Gets called from ClientRandomWalk finds the best next move for each ant in the ant list
    * @param CommData, AntData
-   * @return AntAction 
+   * @return the action of the ant.
    */
   public static AntAction chooseAction(CommData data, AntData ant)
   {
@@ -56,12 +63,13 @@ public class AntLogic
       else
       {
         path = new AntAStar(ant.gridX, ant.gridY, ClientRandomWalk.getCenterX(),
-            ClientRandomWalk.getCenterY(), ant.id).getPath();
+            ClientRandomWalk.getCenterY(), ant.id, map).getPath();
         listofdirs.add(path);
         action.direction = path.remove(0);
         return action;
       }
     }
+    
     // Distance to nest
     int absToNestX = Math.abs(ant.gridX - ClientRandomWalk.getCenterX());
     int absToNestY = Math.abs(ant.gridY - ClientRandomWalk.getCenterY());
@@ -88,7 +96,6 @@ public class AntLogic
     // no food near you find some!!
     if (data.foodStockPile[FoodType.WATER.ordinal()] < 100)
     {
-      
       return findpath(ant.gridX, ant.gridY,  3495, 832, action, ant); 
     }
     
@@ -121,7 +128,7 @@ public class AntLogic
     }
     else
     {
-      path = new AntAStar(antX, antY, locationX, locationY, ant.id).getPath();
+      path = new AntAStar(antX, antY, locationX, locationY, ant.id, map).getPath();
       listofdirs.add(path);
       action.type = AntActionType.MOVE;
       action.direction = path.remove(0);
