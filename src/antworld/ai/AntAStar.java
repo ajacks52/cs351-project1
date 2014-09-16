@@ -24,7 +24,7 @@ public class AntAStar
   int mapWidth;
   int mapHeight;
 
-  int startX, startY, destX, destY;
+  int startX, startY, destX, destY, antID;
 
   // Open/closed lists (x, y, f, g, h, parentX, parentY)
   ArrayList<Node> open = new ArrayList<Node>();
@@ -34,12 +34,13 @@ public class AntAStar
   ArrayList<Node> path = new ArrayList<Node>();
 
   // Constructor
-  public AntAStar(int startX, int startY, int destX, int destY)
+  public AntAStar(int startX, int startY, int destX, int destY, int id)
   {
     this.startX = startX;
     this.startY = startY;
     this.destX = destX;
     this.destY = destY;
+    this.antID = id;
 
     try
     {
@@ -301,6 +302,14 @@ public class AntAStar
     int distance = (int) Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2)
         * (y1 - y2));
     return distance;
+  }
+  
+  /**
+   * gets the id  of ants using astar   
+   */
+  public int getID()
+  {
+    return this.antID;
   }
 
   /**
