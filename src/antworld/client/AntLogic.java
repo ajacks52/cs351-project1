@@ -2,7 +2,6 @@ package antworld.client;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
 import antworld.data.AntAction;
 import antworld.data.AntData;
 import antworld.data.AntType;
@@ -18,22 +17,16 @@ import antworld.ai.Node;
 
 public class AntLogic
 {
-  static AntData ant;
-
-  static AntAction drink = new AntAction(AntActionType.PICKUP, Direction.SOUTHEAST, 50);
-  static AntAction goHome = new AntAction(AntActionType.MOVE, Direction.NORTHWEST);
-  static AntAction findWater = new AntAction(AntActionType.MOVE, Direction.SOUTHEAST);
   static AntAction drop = new AntAction(AntActionType.DROP, Direction.getRandomDir(), 50);
   static ArrayList<Integer> eatten = new ArrayList<Integer>();
-
-  public static ArrayList<Direction> path = new ArrayList<Direction>();
-  public static ArrayList<AntAStar> listofpaths = new ArrayList<AntAStar>();
-  public static ArrayList<ArrayList> listofdirs = new ArrayList<ArrayList>();
+  static ArrayList<Direction> path = new ArrayList<Direction>();
+  static ArrayList<AntAStar> listofpaths = new ArrayList<AntAStar>();
+  static ArrayList<ArrayList> listofdirs = new ArrayList<ArrayList>();
 
   /**
-   * 
-   * @param data
-   * @return
+   * Gets called from ClientRandomWalk finds the best next move for each ant in the ant list
+   * @param CommData, AntData
+   * @return AntAction 
    */
   public static AntAction chooseAction(CommData data, AntData ant)
   {
@@ -81,7 +74,7 @@ public class AntLogic
           System.out.println("/n/n/n/n I am dropping food!! /n//n/n/");
           return drop;
         }
-        return findpath(ant.gridX, ant.gridY,  ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY(), action);
+        return findpath(ant.gridX, ant.gridY,  ClientRandomWalk.getCenterX(), ClientRandomWalk.getCenterY(), action, ant);
       }
     }
     FoodData foodpiece = foodBeingEatten(data);
@@ -90,13 +83,13 @@ public class AntLogic
       // Distance to food
       int absfoodX = Math.abs(ant.gridX - foodpiece.gridX);
       int absfoodY = Math.abs(ant.gridY - foodpiece.gridY);
-      return findpath(ant.gridX, ant.gridY,  foodpiece.gridX, foodpiece.gridY, action);
+      return findpath(ant.gridX, ant.gridY,  foodpiece.gridX, foodpiece.gridY, action, ant);
     }
     // no food near you find some!!
     if (data.foodStockPile[FoodType.WATER.ordinal()] < 100)
     {
       
-      return findpath(ant.gridX, ant.gridY,  3495, 832, action); 
+      return findpath(ant.gridX, ant.gridY,  3495, 832, action, ant); 
     }
     
     action.type = AntActionType.MOVE;
@@ -105,11 +98,19 @@ public class AntLogic
   }
 
   /**
-   * 
-   * @param data
-   * @return
+   * Checks if ant is currently using astar i.e. has a path. If the ant 
+   * is already using astar then it returns the next action the ant needs to take 
+   * according to astar if it's not using astar then it makes a new instance of astar
+   * and then return the ants first action based on astars calculation
+   * @param int antX
+   * @param int antY
+   * @param int locationX
+   * @param int locationY
+   * @param AntAction action
+   * @param AntData ant
+   * @return AntAction
    */
-  private static AntAction findpath(int antX, int antY, int locationX, int locationY, AntAction action)
+  private static AntAction findpath(int antX, int antY, int locationX, int locationY, AntAction action, AntData ant)
   {
     AntAStar pathlist = usingAstar(ant.id);
     if (pathlist != null) // the ant is on already using astar
@@ -129,9 +130,9 @@ public class AntLogic
     
   }
   /**
-   * 
-   * @param data
-   * @return
+   * Checks if the food piece in question is already being eatten 
+   * @param CommData data
+   * @return FoodData
    */
   private static FoodData foodBeingEatten(CommData data)
   {
@@ -154,9 +155,9 @@ public class AntLogic
   }
   
   /**
-   * 
-   * @param data
-   * @return
+   * Checks whether ant is using astar already
+   * @param int the ant id
+   * @return AntAStar
    */
   private static AntAStar usingAstar(int id)
   {
@@ -170,20 +171,11 @@ public class AntLogic
     return null;
   }
 
-  /**
-   * 
-   * @param data
-   * @return
-   */
-  private static Direction nextDir(AntAStar path)
-  {
-    return path.getPath().remove(0);
-  }
 
   /**
-   * 
-   * @param data
-   * @return
+   * Checks if ant is underground
+   * @param AntData ant
+   * @return boolean
    */
   private static boolean underGround(AntData ant)
   {
