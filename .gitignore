@@ -4,6 +4,10 @@
 .mtj.tmp/
 
 # Package Files #
+META-INF/**
+.project
+.metadata
+bin/**
 *.jar
 *.war
 *.ear
