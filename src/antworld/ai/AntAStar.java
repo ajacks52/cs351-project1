@@ -1,8 +1,12 @@
 package antworld.ai;
 
+
 /**
+ * The AntAStar class determines the least costly path for an ant to travel
+ * from its current position to its desired destination using the A* 
+ * pathfinding algorithm.
  * @author 	Erin Sosebee
- * @version	2014.15.09
+ * @version	2014.18.09
  */
 
 import java.util.ArrayList;
@@ -13,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-import antworld.dynamicmap.AnalyzeMap;
 import antworld.data.Direction;
 
 public class AntAStar
@@ -34,7 +37,8 @@ public class AntAStar
   ArrayList<Node> path = new ArrayList<Node>();
 
   // Constructor
-  public AntAStar(int startX, int startY, int destX, int destY, int id, Color[][] map)
+  public AntAStar(int startX, int startY, int destX, int destY, int id,
+      Color[][] map)
   {
     this.startX = startX;
     this.startY = startY;
@@ -46,23 +50,20 @@ public class AntAStar
     try
     {
       img = ImageIO.read(new File("resources/AntWorld.png"));
+    } catch (IOException e)
+    {
     }
-    catch (IOException e) {}
 
     mapHeight = img.getHeight();
     mapWidth = img.getWidth();
 
-//    map = new AnalyzeMap().getRGB();
-    // System.out.println(map.length);
-
-    // System.out.println(startX + "," + startY + "," + destX + "," +
-    // destY);
     findPath(startX, startY, destX, destY);
   }
 
   /**
    * Once the destination has been reached, the path is built based on which
    * nodes are present in the closed list.
+   * 
    * @param x1
    * @param y1
    * @param x2
@@ -98,6 +99,7 @@ public class AntAStar
 
   /**
    * Removes a node from the open list.
+   * 
    * @param x
    * @param y
    * @return true if a node has been removed, else false.
@@ -117,6 +119,7 @@ public class AntAStar
 
   /**
    * Checks if a point is contained within the list of 'closed' nodes.
+   * 
    * @param x
    * @param y
    * @return true if the given point is in the closed list, otherwise false.
@@ -135,6 +138,7 @@ public class AntAStar
 
   /**
    * Determines whether or not a point is found within the 'open' list of nodes.
+   * 
    * @param x
    * @param y
    * @return true if the given point is in the open list, otherwise false.
@@ -153,6 +157,7 @@ public class AntAStar
 
   /**
    * Checks if there are any nodes in the open list.
+   * 
    * @return true if the list is empty, otherwise false.
    */
   public boolean emptyOpen()
@@ -165,6 +170,7 @@ public class AntAStar
   /**
    * Gets the position of a point within reachable distance of the current
    * point. Adds the point onto the open list.
+   * 
    * @param newX
    * @param newY
    * @param tempX
@@ -195,6 +201,7 @@ public class AntAStar
   /**
    * Calculates the shortest path between two points using the A* path finding
    * algorithm.
+   * 
    * @param x1
    * @param y1
    * @param x2
@@ -240,7 +247,7 @@ public class AntAStar
           tempPy = open.get(i).getParentY();
         }
       }
-      
+
       // If the current point is the target location, then the path has
       // been found.
       if (tempX == destX && tempY == destY)
@@ -249,9 +256,9 @@ public class AntAStar
         closed.add(new Node(tempX, tempY, tempF, tempG, tempH, tempPx, tempPy));
 
         // Get path to be traveled
+
         traversePath(x1, y1, x2, y2);
-      }
-      else
+      } else
       {
         // Move the current position onto the closed list
         closed.add(new Node(tempX, tempY, tempF, tempG, tempH, tempPx, tempPy));
@@ -274,8 +281,9 @@ public class AntAStar
   }
 
   /**
-   * Calculates the distance between two points using the formula: 
-   * d = sqrt((x1 - x2)^2 + (y1 - y2)^2)
+   * Calculates the distance between two points using the formula: d = sqrt((x1
+   * - x2)^2 + (y1 - y2)^2)
+   * 
    * @param x1
    * @param y1
    * @param x2
@@ -288,9 +296,9 @@ public class AntAStar
         * (y1 - y2));
     return distance;
   }
-  
+
   /**
-   * Gets the ID of the ants using A*.   
+   * Gets the ID of the ants using A*.
    */
   public int getID()
   {
@@ -305,6 +313,8 @@ public class AntAStar
     Collections.reverse(path);
     ArrayList<Direction> directions = new ArrayList<Direction>();
 
+    System.out.println(path.size());
+
     for (int i = 1; i < path.size(); i++)
     {
       int tempX = path.get(i - 1).getX();
@@ -315,49 +325,33 @@ public class AntAStar
       if (x == tempX && y > tempY)
       {
         directions.add(Direction.NORTH);
-      }
-      else if (x == tempX && y < tempY)
+      } else if (x == tempX && y < tempY)
       {
         directions.add(Direction.SOUTH);
-      }
-      else if (x == tempX + 1 && y == tempY)
+      } else if (x == tempX + 1 && y == tempY)
       {
         directions.add(Direction.EAST);
-      }
-      else if (x == tempX - 1 && y == tempY)
+      } else if (x == tempX - 1 && y == tempY)
       {
         directions.add(Direction.WEST);
-      }
-      else if (x == tempX - 1 && y == tempY + 1)
+      } else if (x == tempX - 1 && y == tempY + 1)
       {
         directions.add(Direction.NORTHWEST);
-      }
-      else if (x == tempX + 1 && y == tempY + 1)
+      } else if (x == tempX + 1 && y == tempY + 1)
       {
         directions.add(Direction.NORTHEAST);
-      }
-      else if (x == tempX + 1 && y == tempY - 1)
+      } else if (x == tempX + 1 && y == tempY - 1)
       {
         directions.add(Direction.SOUTHEAST);
-      }
-      else if (x == tempX - 1 && y == tempY - 1)
+      } else if (x == tempX - 1 && y == tempY - 1)
       {
         directions.add(Direction.SOUTHWEST);
       }
     }
-
-    // System.out.println("path: ");
-    // for (int i = 0; i < directions.size(); i++)
-    // {
-    // System.out.println(path.get(i).getX() + "," + path.get(i).getY());
-    // System.out.println(directions.get(i));
-    // }
     return directions;
   }
 
-  /**
-   * main
-   */
+  /** Unit test */
   // public static void main(String[] args)
   // {
   // new AntAStar(1,2,2,5).getPath();

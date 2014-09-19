@@ -1,7 +1,15 @@
+/**
+ * @author Adam Mitchell
+ * @author Erin Sosebee
+ * 
+ * The AnalyzeMap class creates a 2D array of colors found at each pixel
+ * of the map.
+ */
 package antworld.dynamicmap;
 
 /**
- * 
+ * Class to store all the values of the map in 2-d array.
+ * Gets called in ClientRandomWalk 
  */
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -11,6 +19,7 @@ import javax.imageio.ImageIO;
 
 public class AnalyzeMap
 {
+  private static final boolean DEBUG = false;
   BufferedImage img = null;
   public static Color rgb[][] = null;
   public boolean done = false;
@@ -20,13 +29,16 @@ public class AnalyzeMap
   {
     try
     {
-      img = ImageIO.read(new File("resources/AntWorld2.png"));
+      img = ImageIO.read(new File("resources/AntWorld.png"));
+    } catch (IOException e)
+    {
     }
-    catch (IOException e) {}
-    
-    System.out.println("STARTED: AnalyzeMap");
+
+    if (DEBUG)
+      System.out.println("STARTED: AnalyzeMap");
     findRGB();
-    System.out.println("FINISHED: AnalyzeMap");
+    if (DEBUG)
+      System.out.println("FINISHED: AnalyzeMap");
     done = true;
   }
 
@@ -40,40 +52,50 @@ public class AnalyzeMap
     {
       for (int x = 0; x < img.getWidth(); x++)
       {
-      	int rgbVal = img.getRGB(x, y);
-      	Color color = new Color(rgbVal);
-      	rgb[y][x] = color;
+        int rgbVal = img.getRGB(x, y);
+        Color color = new Color(rgbVal);
+        rgb[y][x] = color;
       }
     }
-  }
-  
-  /**
-   * @return a 2D array representing the colors at each pixel of the map.
-   */
-  public Color[][] getRGB()
-  {
-  	return rgb;
+    if (DEBUG)
+    {
+      System.out.println("This pixel's value is: " + rgb[1000][1000]
+          + " Should be: r=88,g=121,b=78");
+    }
   }
 
   /**
+   * Gets the RGB map.
+   * @return a 2D array representing the colors of the map.
+   */
+  public Color[][] getRGB()
+  {
+    return rgb;
+  }
+
+  /**
+   * Gets the width of the map.
    * @return the width of the map.
    */
   public int getWidth()
   {
-  	return img.getWidth();
+    return img.getWidth();
   }
-  
+
   /**
+   * Gets the height of the map.
    * @return the height of the map.
    */
   public int getHeight()
   {
-  	return img.getHeight();
+    return img.getHeight();
   }
-  
-//  public static void main(String[] args)
-//  {
-//     new AnalyzeMap();
-//     System.out.println(rgb[1000][2000]);
-//  }
+
+  // Unit Testing
+  // public static void main(String[] args)
+  // {
+  // new AnalyzeMap();
+  // System.out.println(rgb[1000][2000]);
+  // }
+
 }

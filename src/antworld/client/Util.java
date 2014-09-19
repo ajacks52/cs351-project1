@@ -1,6 +1,5 @@
 package antworld.client;
 
-
 import java.awt.Container;
 import java.awt.MediaTracker;
 import java.awt.image.BufferedImage;
@@ -19,7 +18,8 @@ public class Util
    */
   public static BufferedImage loadImage(String imagePath, Container widgit)
   {
-    if (imagePath == null) return null;
+    if (imagePath == null)
+      return null;
 
     if (widgit == null)
     {
@@ -43,8 +43,7 @@ public class Util
       // Register it with media tracker
       tracker.addImage(loadedImage, 1);
       tracker.waitForAll();
-    }
-    catch (Exception e)
+    } catch (Exception e)
     {
       System.out.println("Cannot Open image: " + imagePath);
       e.printStackTrace();
@@ -52,9 +51,7 @@ public class Util
     }
     return loadedImage;
   }
-  
-  
-  
+
   public static int manhattanDistance(int x1, int y1, int x2, int y2)
   {
     int dx = Math.abs(x2 - x1);

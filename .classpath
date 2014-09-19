@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Adam/Dropbox/CS351/project1/librarycode/javax.mail.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="/nfs/student/a/adamlobo/cs351/project1/librarycode/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
