@@ -290,9 +290,11 @@ class DrawnAnt
  */
 class Times extends TimerTask
 {
+  private static final boolean DEBUG = false;
+
   public void run()
   {
-    System.out.println("\n\n\n\n\n\nerasing pixels!!\n\n\n\n\n\n\n");
+    if(DEBUG) System.out.println("\n\n\n\n\n\nerasing pixels!!\n\n\n\n\n\n\n");
     Gui.erasePixels();
   }
 }
