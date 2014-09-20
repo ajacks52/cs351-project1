@@ -370,7 +370,7 @@ public class ClientRandomWalk
     // b146-28
     // b146-71, b146-74 and b146-76. b146-26
     // our sever is b146-72
-    String serverHost = "b146-72.cs.unm.edu";
+    String serverHost = "b146-26.cs.unm.edu";
     new ClientRandomWalk(serverHost, Constants.PORT);
   }
 
